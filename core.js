@@ -4,64 +4,31 @@ let Queue = require('./sleeping_peer.js').queue//加新的自动删旧的
 let Stack = require('./active_peers.js').stack//加新的加不进去
 let checklist = require('./checklist.js').checklist
 function Working_p2p(localhost, localport, callback, argu) {
-  return {
+  let ob = {
     localhost: localhost,
     localport: localport,
 
     callback: callback,
     argu: argu,
-    events: new events()
+    events: new events(),
 
     sleeping_peers: Queue(100),//a queue to keep 100 known peers
     active_peers: Stack(6),//a stack to have 6 active peers
     checklist: checklist(5),
-    
-    server: (function () {
-      let server = net.createServer((c) => {
-        c.setEncoding('utf8')
-        let obj
-        console.log('incomming connection')
-        c.on('data', (chunk) => {
-          try{
-            obj = JSON.parse(chunk)
-            switch (obj.type) {
-              case 'Ack1':
-                this.step2(obj.data, c)
-                break
-              case 'Ack2':
-                console.log('step3.2')
-                this.step4(obj.data, c)
-                break
-              case 'Ack3':
-                this.step5(obj.data)
-                break
-              case 'peer_query':
-                this.peer_query(obj.data, c)
-                break
-              case 'peer_response':
-                this.peer_response(obj.data)
-                break
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        })
-      })
-      server.on("close",function(){})
-      return server
-    })(),
 
     name: JSON.stringify({host:localhost,port:localport}),
+    thi:this,
 
     serve: function () {
+      this.server.on("close",function(){})
       this.server.listen(this.localport, function () {
         console.log('Alice ready')
       })
     },
 
-    timer: setInterval(()=>{
-      console.log('timer')
-    },1500),
+    // timer: setInterval(()=>{
+    //   console.log('timer')
+    // },1500),
 
     step2: function (data, c) {
 
@@ -177,10 +144,43 @@ function Working_p2p(localhost, localport, callback, argu) {
       if (this.argu) this.argu = argu
       this.new_connection(peer)
     }
- }
+  }
+  ob.server = net.createServer(function (c) {
+    c.setEncoding('utf8')
+    let obj
+    console.log('incomming connection')
+    c.on('data', (chunk) => {
+      try{
+        obj = JSON.parse(chunk)
+        switch (obj.type) {
+          case 'Ack1':
+            ob.step2(obj.data, c)
+            break
+          case 'Ack2':
+            console.log('step3.2')
+            ob.step4(obj.data, c)
+            break
+          case 'Ack3':
+            ob.step5(obj.data)
+            break
+          case 'peer_query':
+            console.log('peer_query')
+            ob.peer_query(obj.data, c)
+            break
+          case 'peer_response':
+            ob.peer_response(obj.data)
+            break
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+  })
+  ob.server.on("close",function(){})
+  return ob
 }
 
-function working_p2p = function (localhost, localport, callback, argu) {
+let working_p2p = function (localhost, localport, callback, argu) {
   return Object.create(Working_p2p(localhost, localport, callback, argu))
 }
 

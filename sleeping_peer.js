@@ -1,6 +1,6 @@
 
 function Queue(length) {
-  return {
+  let queue = {
     map: new Map(),
     max_length: length,
   
@@ -45,6 +45,8 @@ function Queue(length) {
       return arr
     }
   }
+  queue.size = queue.map.size
+  return queue
 }
   // let q = new queue(3)
   // q.set(1,'a')
