@@ -157,7 +157,7 @@ function Working_p2p(localhost, localport, callback, argu) {
             ob.step2(obj.data, c)
             break
           case 'Ack2':
-            console.log('step3.2')
+            // console.log('step3.2')
             ob.step4(obj.data, c)
             break
           case 'Ack3':
