@@ -176,6 +176,7 @@ function Working_p2p(localhost, localport, callback, argu) {
       }
     })
   })
+  
   ob.server.on("close",function(){})
   return ob
 }
