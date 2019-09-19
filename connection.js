@@ -4,12 +4,12 @@ function broadcast (localhost, localport, callback, argu) {
   let obj = Working_p2p(localhost, localport, callback, argu)
   obj.peer_query = function (num, c) {
     let arr = obj.sleeping_peers.find_new(-1)
-    console.log(`peer_query:${arr}`)
+    // console.log(`peer_query:${arr}`)
     let obj1 = {type: "peer_response", data: arr}
     c.whois.constant_socket.write(JSON.stringify(obj1))
   }
   obj.peer_response = function (arr) {
-    console.log(`peer_query:${arr}`)
+    // console.log(`peer_query:${arr}`)
     obj.sleeping_peers.addmany(arr)
   }
   obj.check_connection = function () {//找出是否有需要增加节点
@@ -18,7 +18,7 @@ function broadcast (localhost, localport, callback, argu) {
     // console.log(`check interval te:${te}`)
     if(te > 0) {
 
-      console.log(`active_peer:${obj.active_peers.keys()}`)
+      // console.log(`active_peer:${obj.active_peers.keys()}`)
 
       let peers = obj.sleeping_peers.find_new(te)//find the underlying peers. if not enough get more
       for(let i of peers){

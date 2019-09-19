@@ -12,7 +12,7 @@ function broadcast (localhost, localport, callback, argu) {
       setTimeout(()=>{
         let ob = obj.checklist.search()
         for (let [key, value] of Object.entries(ob)) {
-          console.log(`broadcast::::${key}: ${value}`)
+          // console.log(`broadcast::::${key}: ${value}`)
           value.forEach((element) => {
             // console.log(`element:${element}`)
             obj
@@ -32,7 +32,7 @@ function broadcast (localhost, localport, callback, argu) {
     console.log(`success ${who}`)
     let c = this.active_peers.get(who).constant_socket
     c.setEncoding('utf8')
-    console.log('incomming message')
+    // console.log('incomming message')
     c.on('data', (chunk) => {
       console.log('comming information:'+chunk)
       this.onbroadcast(chunk+'', who)

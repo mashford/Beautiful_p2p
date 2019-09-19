@@ -120,7 +120,7 @@ function Working_p2p(localhost, localport, callback, argu) {
           }
         })
         constant_socket.on('error', (error)=>{
-          console.log(error)
+          // console.log(error)
           console.log(`error connecting ${error.address}:${error.port}`)
         })
       } catch (err) {
@@ -148,7 +148,7 @@ function Working_p2p(localhost, localport, callback, argu) {
   ob.server = net.createServer(function (c) {
     c.setEncoding('utf8')
     let obj
-    console.log('incomming connection')
+    // console.log('incomming connection')
     c.on('data', (chunk) => {
       try{
         obj = JSON.parse(chunk)
@@ -164,7 +164,7 @@ function Working_p2p(localhost, localport, callback, argu) {
             ob.step5(obj.data)
             break
           case 'peer_query':
-            console.log('peer_query')
+            // console.log('peer_query')
             ob.peer_query(obj.data, c)
             break
           case 'peer_response':
@@ -176,7 +176,7 @@ function Working_p2p(localhost, localport, callback, argu) {
       }
     })
   })
-  
+
   ob.server.on("close",function(){})
   return ob
 }
