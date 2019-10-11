@@ -9,10 +9,11 @@ function broadcast (localhost, localport, callback, argu) {
   }
   obj.onbroadcast = function (msg, who) {
     if(obj.checklist.add(msg, who, obj.active_peers.keys())) {
+      // console.log(`new message ${msg} from ${who}`)
       setTimeout(()=>{
         let ob = obj.checklist.search()
         for (let [key, value] of Object.entries(ob)) {
-          // console.log(`broadcast::::${key}: ${value}`)
+          console.log(`broadcast ${key}`)
           value.forEach((element) => {
             // console.log(`element:${element}`)
             obj
@@ -20,10 +21,10 @@ function broadcast (localhost, localport, callback, argu) {
             .get(element)
             .temp_socket
             .write(key)
-          }, 20000)
+          })
         }
         // console.log(JSON.stringify(obj))
-      })
+      },5000)
     } else {
       // console.log('fort')
     }
@@ -34,8 +35,9 @@ function broadcast (localhost, localport, callback, argu) {
     c.setEncoding('utf8')
     // console.log('incomming message')
     c.on('data', (chunk) => {
-      console.log('comming information:'+chunk)
-      this.onbroadcast(chunk+'', who)
+      console.log(`comming information: ${chunk} from ${who}`)
+      this.onbroadcast(chunk, who)
+      chunk = null
     })
     if (this.callback) global.callback(global.argu)
     this.callback = null
