@@ -13,9 +13,13 @@ wp1.connect({ host: 'localhost', port: 4321}, () => {
   eventEmitter.emit('connect_su')
 }, eventEmitter)
 
-setTimeout(()=>{
-  wp1.broadcast('30000')
-},2000)
-setTimeout(()=>{
-  wp1.broadcast('33333')
-},15000)
+// setTimeout(()=>{
+//   wp1.broadcast('3:2000')
+// },2000)
+// setTimeout(()=>{
+//   wp1.broadcast('3:15000')
+// },15000)
+process.stdin.on('data', (data)=>{
+  // console.log(data.toString('utf8'))
+  wp1.broadcast(data.toString('utf8'))
+})

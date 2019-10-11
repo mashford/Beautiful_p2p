@@ -22,7 +22,8 @@ function Working_p2p(localhost, localport, callback, argu) {
     serve: function () {
       this.server.on("close",function(){})
       this.server.listen(this.localport, function () {
-        console.log('Alice ready')
+        // console.log('Alice ready')
+        ob.events.emit('server_ready')
       })
     },
 
@@ -32,7 +33,7 @@ function Working_p2p(localhost, localport, callback, argu) {
 
     step2: function (data, c) {
 
-      console.log('step2')
+      // console.log('step2')
 
       let peer = {}
       peer.host = data.host
@@ -45,7 +46,7 @@ function Working_p2p(localhost, localport, callback, argu) {
       })
 
       let constant_socket = net.createConnection({host:peer.host,port:peer.port}, () => {
-        console.log('step3.1')
+        // console.log('step3.1')
         let obj = {type:'Ack2', data: {host:this.localhost,port:this.localport}}
         constant_socket.write(JSON.stringify(obj))
         peer.constant_socket = constant_socket
@@ -64,19 +65,19 @@ function Working_p2p(localhost, localport, callback, argu) {
             }
           },5000)
         } catch (error) {
-          console.log(error)
+          // console.log(error)
         }
       })
     },
     step5: function (data) {
       try {
         let data_s = JSON.stringify(data)
-        console.log('step4.2')
+        // console.log('step4.2')
         this.active_peers.get(data_s).ready = true
         console.log(this.active_peers.get(data_s).port)
         this.success_call(data_s)
       } catch (err) {
-        console.log(err)
+        // console.log(err)
       }
     },
     step4: function (data, c) {
@@ -89,7 +90,7 @@ function Working_p2p(localhost, localport, callback, argu) {
           this.active_peers.delete(data_s)
         })
         peer.name = data_s
-        console.log('step4.1')
+        // console.log('step4.1')
         peer.ready = true
         let obj = {type: 'Ack3', data: {host: this.localhost, port: this.localport}}
         this.active_peers.get(data_s).constant_socket.write(JSON.stringify(obj))
@@ -99,7 +100,7 @@ function Working_p2p(localhost, localport, callback, argu) {
     new_connection: function (peerinfo) {
       try {
         let constant_socket = net.createConnection({host: peerinfo.host, port: peerinfo.port}, ()=>{
-          console.log('step1.1')
+          // console.log('step1.1')
           // let obj = {type:'Ack1', data:{host:localhost, port: localport}}
           // console.log('test1.js')
           constant_socket.write(JSON.stringify({type:'Ack1', data:{host:this.localhost, port: this.localport}}))
@@ -116,19 +117,19 @@ function Working_p2p(localhost, localport, callback, argu) {
               }
             },5000)
           } catch (error) {
-            console.log(error)
+            // console.log(error)
           }
         })
         constant_socket.on('error', (error)=>{
           // console.log(error)
-          console.log(`error connecting ${error.address}:${error.port}`)
+          // console.log(`error connecting ${error.address}:${error.port}`)
         })
       } catch (err) {
-        console.log(`error connecting peer ${JSON.stringify(peerinfo)}`)
+        // console.log(`error connecting peer ${JSON.stringify(peerinfo)}`)
       }
     },
     success_call: function (who) {
-      console.log(`success ${who}`)
+      // console.log(`success ${who}`)
       process.stdin.pipe(this.active_peers.get(who).temp_socket)
       this.active_peers.get(who).constant_socket.pipe(process.stdout)
       if (this.callback) this.callback(this.argu)
@@ -171,9 +172,11 @@ function Working_p2p(localhost, localport, callback, argu) {
             ob.peer_response(obj.data)
             break
         }
+        chunk = null
       } catch (error) {
-        console.log(error)
+        // console.log(`chunk:${chunk}`)
       }
+      chunk = null
     })
   })
 

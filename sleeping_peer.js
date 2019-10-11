@@ -11,11 +11,12 @@ function Queue(length) {
       this.map.set(entries,value)
     },
     add: function (value) {
-      this.set(value,0)
+      this.map.set(value,0)
     },
     addmany: function (value) {
+      // if (typeof(value) == 'string') console.log('panic! string')
       for (let i of value) {
-          this.set(i, 1)
+          this.map.set(i, 1)
       }
     },
     get: function (entry) {

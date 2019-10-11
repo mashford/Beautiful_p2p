@@ -10,18 +10,27 @@ function broadcast (localhost, localport, callback, argu) {
   obj.onbroadcast = function (msg, who) {
     if(obj.checklist.add(msg, who, obj.active_peers.keys())) {
       // console.log(`new message ${msg} from ${who}`)
+      obj.events.emit('data', msg)
       setTimeout(()=>{
-        let ob = obj.checklist.search()
-        for (let [key, value] of Object.entries(ob)) {
-          console.log(`broadcast ${key}`)
-          value.forEach((element) => {
-            // console.log(`element:${element}`)
-            obj
-            .active_peers
-            .get(element)
-            .temp_socket
-            .write(key)
-          })
+        let ob = obj.checklist.search(msg)
+        // for (let [key, value] of ob.entries()) {
+        //   value.forEach((element) => {
+        //     // console.log(`element:${element}`)
+        //     console.log(`fuck ${key}`)
+        //     obj
+        //     .active_peers
+        //     .get(element)
+        //     .temp_socket
+        //     .write(key)
+        //   })
+        // }
+        for (let who of ob){
+          // console.log(`fuck ${msg}`)
+          obj
+          .active_peers
+          .get(who)
+          .temp_socket
+          .write(msg)
         }
         // console.log(JSON.stringify(obj))
       },5000)
@@ -30,12 +39,12 @@ function broadcast (localhost, localport, callback, argu) {
     }
   }
   obj.success_call = function (who) {
-    console.log(`success ${who}`)
+    // console.log(`success ${who}`)
     let c = this.active_peers.get(who).constant_socket
     c.setEncoding('utf8')
     // console.log('incomming message')
     c.on('data', (chunk) => {
-      console.log(`comming information: ${chunk} from ${who}`)
+      // console.log(`comming information: ${chunk} from ${who}`)
       this.onbroadcast(chunk, who)
       chunk = null
     })
