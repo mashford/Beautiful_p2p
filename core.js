@@ -46,7 +46,7 @@ function Working_p2p(localhost, localport, callback, argu) {
       })
 
       let constant_socket = net.createConnection({host:peer.host,port:peer.port}, () => {
-        // console.log('step3.1')
+        // console.log('step3.1')//use udp
         let obj = {type:'Ack2', data: {host:this.localhost,port:this.localport}}
         constant_socket.write(JSON.stringify(obj))
         peer.constant_socket = constant_socket
