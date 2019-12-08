@@ -17,9 +17,7 @@ function broadcast (localhost, localport, callback, argu) {
     let te = 6-obj.active_peers.size()
     // console.log(`check interval te:${te}`)
     if(te > 0) {
-
-      // console.log(`active_peer:${obj.active_peers.keys()}`)
-
+      // console.log(`active_peer:${obj.active_peers.keys()}`
       let peers = obj.sleeping_peers.find_new(te)//find the underlying peers. if not enough get more
       for(let i of peers){
         if (!(obj.active_peers.map.has(i))&&i!=obj.name){ //如果不在activepeer里
@@ -28,9 +26,8 @@ function broadcast (localhost, localport, callback, argu) {
       }
     }
   }
-  obj.query_for_peers = function () {//如果少于100个潜在peer就会调用。询问所有其他节点的了解的节点
-    // console.log('query_for_peers')
-    if (obj.sleeping_peers.map.size < 100) {
+  obj.query_for_peers = function () {//如果少于10个潜在peer就会调用。询问所有其他节点的了解的节点
+    if (obj.sleeping_peers.map.size < 10) {
       for (let i of obj.active_peers.values()) {
         i.constant_socket.write('{"type":"peer_query","data":50}')
       }
@@ -39,7 +36,6 @@ function broadcast (localhost, localport, callback, argu) {
   obj.wake_up_peer = function (str) {
     //get one from stack and build new connection
     let peer = JSON.parse(str)
-    // console.log(`wake_up_peer:${str}`)
     obj.new_connection(peer)
   }
   obj.arc = setInterval(()=>{

@@ -2,7 +2,7 @@ const net = require('net')
 const events = require('events')
 let Queue = require('./sleeping_peer.js').queue//加新的自动删旧的
 let Stack = require('./active_peers.js').stack//加新的加不进去
-let checklist = require('./checklist.js').checklist
+let Checklist = require('./checklist.js').checklist
 function Working_p2p(localhost, localport, callback, argu) {
   let ob = {
     localhost: localhost,
@@ -12,12 +12,12 @@ function Working_p2p(localhost, localport, callback, argu) {
     argu: argu,
     events: new events(),
 
-    sleeping_peers: Queue(100),//a queue to keep 100 known peers
+    sleeping_peers: Queue(10),//a queue to keep 10 known peers
     active_peers: Stack(6),//a stack to have 6 active peers
-    checklist: checklist(5),
+    checklist: Checklist(5),//record recent messages
 
     name: JSON.stringify({host:localhost,port:localport}),
-    thi:this,
+    // thi:this,
 
     serve: function () {
       this.server.on("close",function(){})
@@ -129,9 +129,9 @@ function Working_p2p(localhost, localport, callback, argu) {
       }
     },
     success_call: function (who) {
-      // console.log(`success ${who}`)
-      process.stdin.pipe(this.active_peers.get(who).temp_socket)
-      this.active_peers.get(who).constant_socket.pipe(process.stdout)
+      console.log(`success ${who}`)
+      // process.stdin.pipe(this.active_peers.get(who).temp_socket)
+      // this.active_peers.get(who).constant_socket.pipe(process.stdout)
       if (this.callback) this.callback(this.argu)
       this.callback = null
       this.argu = null
