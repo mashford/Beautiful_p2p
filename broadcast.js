@@ -10,7 +10,7 @@ function broadcast (localhost, localport, callback, argu) {
   obj.onbroadcast = function (msg, who) {
     if(obj.checklist.add(msg, who, obj.active_peers.keys())) {
       //if client receive a message for the first time, it will tell it to its peers
-      obj.events.emit('newBroadcast', msg)
+      obj.event_center.emit('newBroadcast', msg)
       setTimeout(()=>{
         let ob = obj.checklist.search(msg)
         for (let who of ob){
@@ -24,7 +24,7 @@ function broadcast (localhost, localport, callback, argu) {
     } //otherwise do nothing
   }
   obj.success_call = function (who) {//exacuted when newly connected
-    console.log(`connected to ${who}`)
+    this.event_center.emit('newConnection', who)
     let c = this.active_peers.get(who).constant_socket
     c.setEncoding('utf8')
     c.on('data', (chunk) => {

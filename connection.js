@@ -22,6 +22,7 @@ function broadcast (localhost, localport, callback, argu) {
       for(let i of peers){
         if (!(obj.active_peers.map.has(i))&&i!=obj.name){ //如果不在activepeer里
           obj.wake_up_peer(i)//build new connections with these peers
+          console.log(`obj.wake_up_peer(i)${i}`)
         }
       }
     }
