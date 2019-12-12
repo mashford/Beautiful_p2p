@@ -1,4 +1,5 @@
 ### Beautiful-p2p
+
 A peer-to-peer module finished in beautiful British Columbia.
 
 #### Usage
@@ -6,7 +7,7 @@ A peer-to-peer module finished in beautiful British Columbia.
 ```javascript
 let beautiful_p2p = require('Beautiful-p2p').beautiful_p2p
 let bp = beautiful_p2p('localhost',4321)
-bp.events.on('newBroadcast', function(data){
+bp.event_center.on('newBroadcast', function(data){
   console.log(data)
 })
 bp.serve()
@@ -15,6 +16,7 @@ process.stdin.on('data', (data)=>{
   bp.broadcast(data.toString('utf8'))
 })
 ```
+
 #### APIs
 
 beautiful_p2p(*localhost*, *localport*, *callback*, *argu*)
@@ -37,10 +39,26 @@ beautiful_p2p(*localhost*, *localport*, *callback*, *argu*)
 * serve():void start the server. Must be called.
 * connect(*config*, *callback*, *argu*):void set up a new connection
   * config <Object> :{port: number, host: string}
-  * callback<Function> optional
-  * argu<any>
+  * callback<Function> optional, callback function
+  * argu<any> optional, arguments for callback function
 
 * check_connection(): void check if more peers are needed. Automatically called every 15s. 
 * broadcast (msg): void broadcast a new message
   * msg<String> the message you want to broadcast.
 
+`Events`
+
+All events comes from `events` property
+
+* newBroadcast  litsen to this event if you want to get information broad-casted in the network
+  * msg <String> information being broadcasted 
+
+* newConnection  triggered when a new connection was set up 
+  * who<String> ip and port of the peer being connected
+
+* error  emitted when an error is detected
+  * msg<String> error information
+
+* server_ready  emitted when the server is ready
+
+* server_close  emitted when the server is about to close

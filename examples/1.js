@@ -1,20 +1,30 @@
-// let beautiful_p2p = require('../core.js').working_p2p
 let beautiful_p2p = require('../index.js').beautiful_p2p
 let wp1 = beautiful_p2p('localhost',4321)
 wp1.event_center.on('newBroadcast', function(data){
-  console.log(`new broad cast: ${data}`)
+  console.log(`new broadcast: ${data}`)
 })
-wp1.serve()
 
-// setTimeout(()=>{
-//   wp1.broadcast('1:2000')
-// },2000)
-// setTimeout(()=>{
-//   wp1.broadcast('1:15000')
-// },15000)
-wp1.event_center.on('err',(e)=>{
+wp1.event_center.on('newConnection', function(who){
+  console.log(`new connection: ${who}`)
+})
+
+
+wp1.event_center.on('server_ready', function(){
+  console.log('server_ready')
+})
+
+wp1.event_center.on('server_close', function(){
+  console.log('server_close')
+})
+
+wp1.event_center.on('error',(e)=>{
   console.log(`error:::${e}`)
 })
+
+wp1.serve()
+
+
+
 process.stdin.on('data', (data)=>{
   console.log(data.toString('utf8'))
   wp1.broadcast(data.toString('utf8'))

@@ -57,7 +57,7 @@ function Working_p2p(localhost, localport, callback, argu) {
             }
           },5000)
         } catch (error) {
-          this.event_center.emit('err', error)
+          this.event_center.emit('error', error)
         }
       })
     },
@@ -67,7 +67,7 @@ function Working_p2p(localhost, localport, callback, argu) {
         this.active_peers.get(data_s).ready = true
         this.success_call(data_s)
       } catch (err) {
-        this.event_center.emit('err', err)
+        this.event_center.emit('error', err)
       }
     },
     step4: function (data, c) {
@@ -85,7 +85,7 @@ function Working_p2p(localhost, localport, callback, argu) {
         this.active_peers.get(data_s).constant_socket.write(JSON.stringify(obj))
         this.success_call(data_s)
       } catch (err) {
-        this.event_center.emit('err', err)
+        this.event_center.emit('error', err)
       }
     },
     new_connection: function (peerinfo) {
@@ -106,14 +106,14 @@ function Working_p2p(localhost, localport, callback, argu) {
             },5000)
             
           } catch (error) {
-            this.event_center.emit('err', error)
+            this.event_center.emit('error', error)
           }
         })
         constant_socket.on('error', (error)=>{
-          ob.event_center.emit('err', `error connecting ${error.address}:${error.port}`)
+          ob.event_center.emit('error', `error connecting ${error.address}:${error.port}`)
         })
       } catch (err) {
-        this.event_center.emit('err',`error connecting peer ${JSON.stringify(peerinfo)}`)
+        this.event_center.emit('error',`error connecting peer ${JSON.stringify(peerinfo)}`)
       }
     },
     success_call: function (who) {
@@ -158,13 +158,15 @@ function Working_p2p(localhost, localport, callback, argu) {
         }
         chunk = null
       } catch (error) {
-        ob.event_center.emit('err', error)
+        ob.event_center.emit('error', error)
       }
       chunk = null
     })
   })
 
-  ob.server.on("close",function(){})
+  ob.server.on("close",function(){
+    ob.event_center.emit('server_close')
+  })
   return ob
 }
 
