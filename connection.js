@@ -1,7 +1,7 @@
 let Working_p2p = require('./core.js').Working_p2p
 
-function broadcast (localhost, localport, callback, argu) {
-  let obj = Working_p2p(localhost, localport, callback, argu)
+function broadcast (localhost, localport) {
+  let obj = Working_p2p(localhost, localport)
   obj.peer_query = function (num, c) {
     let arr = obj.sleeping_peers.find_new(-1)
     let obj1 = {type: "peer_response", data: arr}
@@ -40,8 +40,8 @@ function broadcast (localhost, localport, callback, argu) {
   return obj
 }
 
-function beautiful_p2p (localhost, localport, callback, argu) {
-  return Object.create(broadcast(localhost, localport, callback, argu))
+function beautiful_p2p (localhost, localport) {
+  return Object.create(broadcast(localhost, localport))
 }
 
 exports.Beautiful_p2p = broadcast

@@ -1,7 +1,7 @@
 let Working_p2p = require('./connection.js').Beautiful_p2p
 
-function broadcast (localhost, localport, callback, argu) {
-  let obj = Working_p2p(localhost, localport, callback, argu)
+function broadcast (localhost, localport) {
+  let obj = Working_p2p(localhost, localport)
   obj.broadcast = function (msg) {
     for (let i of obj.active_peers.values()) {
       i.temp_socket.write(msg)
@@ -31,15 +31,15 @@ function broadcast (localhost, localport, callback, argu) {
       this.onbroadcast(chunk, who)
       chunk = null
     })
-    if (this.callback) global.callback(global.argu)
+    if (this.callback) this.callback(this.argu)
     this.callback = null
     this.argu = null
   }
   return obj
 }
 
-function beautiful_p2p (localhost, localport, callback, argu) {
-  return Object.create(broadcast(localhost, localport, callback, argu))
+function beautiful_p2p (localhost, localport) {
+  return Object.create(broadcast(localhost, localport))
 }
 
 exports.Beautiful_p2p = broadcast

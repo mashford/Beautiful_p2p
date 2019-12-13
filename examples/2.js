@@ -1,6 +1,6 @@
 let events = require('events')
-// let working_p2p = require('../core.js').working_p2p
-let working_p2p = require('../index.js').beautiful_p2p
+// let beautiful_p2p = require('beautiful_p2p').beautiful_p2p
+let beautiful_p2p = require('../index').beautiful_p2p
 
 let eventEmitter = new events()
 
@@ -8,35 +8,35 @@ eventEmitter.on('callback', () => {
   console.log('callback success')
 })
 
-let wp1 = working_p2p('localhost',5678)
-wp1.event_center.on('newBroadcast', function(data){
+let bp1 = beautiful_p2p('localhost',5678)
+bp1.event_center.on('newBroadcast', function(data){
   console.log(`new broadcast: ${data}`)
 })
 
-wp1.event_center.on('newConnection', function(who){
+bp1.event_center.on('newConnection', function(who){
   console.log(`new connection: ${who}`)
 })
 
 
-wp1.event_center.on('server_ready', function(){
+bp1.event_center.on('server_ready', function(){
   console.log('server_ready')
 })
 
-wp1.event_center.on('server_close', function(){
+bp1.event_center.on('server_close', function(){
   console.log('server_close')
 })
 
-wp1.event_center.on('error',(e)=>{
+bp1.event_center.on('error',(e)=>{
   console.log(`error:::${e}`)
 })
 
-wp1.serve()
+bp1.serve()
 
-wp1.connect({ host: 'localhost', port: 4321}, () => {
+bp1.connect({ host: 'localhost', port: 4321}, (eventEmitter) => {
   eventEmitter.emit('callback')
 }, eventEmitter)
 
 process.stdin.on('data', (data)=>{
   console.log(data.toString('utf8'))
-  wp1.broadcast(data.toString('utf8'))
+  bp1.broadcast(data.toString('utf8'))
 })

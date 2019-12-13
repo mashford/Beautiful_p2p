@@ -3,13 +3,13 @@ const events = require('events')
 let Queue = require('./sleeping_peer.js').queue
 let Stack = require('./active_peers.js').stack
 let Checklist = require('./checklist.js').checklist
-function Working_p2p(localhost, localport, callback, argu) {
+function Working_p2p(localhost, localport) {
   let ob = {
     localhost: localhost,
     localport: localport,
 
-    callback: callback,
-    argu: argu,
+    callback: undefined,
+    argu: undefined,
     event_center: new events(),
 
     sleeping_peers: Queue(10),//a queue to keep 10 known peers
@@ -47,6 +47,9 @@ function Working_p2p(localhost, localport, callback, argu) {
         peer.constant_socket.on('close', () => {
           this.active_peers.delete(JSON.stringify(data))
         })
+        peer.constant_socket.on('error', (error)=>{
+          ob.event_center.emit('error', `peer.constant_socket: ${error}`)
+        })
         this.active_peers.set(JSON.stringify({host:peer.host, port: peer.port}), peer)
         this.sleeping_peers.set(JSON.stringify({host:peer.host, port: peer.port}), 0)
         constant_socket = null
@@ -79,6 +82,9 @@ function Working_p2p(localhost, localport, callback, argu) {
         peer.temp_socket.on('close', () => {
           this.active_peers.delete(data_s)
         })
+        peer.temp_socket.on('error', (error)=>{
+          ob.event_center.emit('error', `peer.constant_socket: ${error}`)
+        })
         peer.name = data_s
         peer.ready = true
         let obj = {type: 'Ack3', data: {host: this.localhost, port: this.localport}}
@@ -110,26 +116,27 @@ function Working_p2p(localhost, localport, callback, argu) {
           }
         })
         constant_socket.on('error', (error)=>{
-          ob.event_center.emit('error', `error connecting ${error.address}:${error.port}`)
+          // ob.event_center.emit('error', `new_connection: ${error}`)
+          constant_socket = null
         })
       } catch (err) {
-        this.event_center.emit('error',`error connecting peer ${JSON.stringify(peerinfo)}`)
+        this.event_center.emit('error',`error connecting peer`)
       }
     },
-    success_call: function (who) {
-      // process.stdin.pipe(this.active_peers.get(who).temp_socket)
-      // this.active_peers.get(who).constant_socket.pipe(process.stdout)
-      if (this.callback) this.callback(this.argu)
-      this.callback = null
-      this.argu = null
-      this.event_center.emit('success_call')
-    },
+    // success_call: function (who) {
+    //   // process.stdin.pipe(this.active_peers.get(who).temp_socket)
+    //   // this.active_peers.get(who).constant_socket.pipe(process.stdout)
+    //   if (this.callback) this.callback(this.argu)
+    //   this.callback = null
+    //   this.argu = null
+    //   this.event_center.emit('success_call')
+    // },
     connect: function (config, callback, argu) {
       let peer = {}
       peer.port = config.port
       peer.host = config.host
-      if (this.callback) this.callback = callback
-      if (this.argu) this.argu = argu
+      if (callback) ob.callback = callback
+      if (argu) ob.argu = argu
       this.new_connection(peer)
     }
   }
@@ -170,8 +177,8 @@ function Working_p2p(localhost, localport, callback, argu) {
   return ob
 }
 
-let working_p2p = function (localhost, localport, callback, argu) {
-  return Object.create(Working_p2p(localhost, localport, callback, argu))
+let working_p2p = function (localhost, localport) {
+  return Object.create(Working_p2p(localhost, localport))
 }
 
 exports.Working_p2p = Working_p2p
