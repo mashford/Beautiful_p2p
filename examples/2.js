@@ -11,6 +11,7 @@ eventEmitter.on('callback', () => {
 let bp1 = beautiful_p2p('localhost',5678)
 bp1.event_center.on('newBroadcast', function(data){
   console.log(`new broadcast: ${data}`)
+  bp1.whisper('{"host":"localhost","port":4321}', 'ZARD')
 })
 
 bp1.event_center.on('newConnection', function(who){

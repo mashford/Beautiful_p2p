@@ -45,10 +45,11 @@ function stack(length) {
 }
 exports.stack = stack
 exports.Stack = Stack
-// let q = new stack(6)
+// let q = new stack(3)
 // q.set(1,'a')
 // q.set(2,'b')
 // q.set(3,'c')
 // q.set(4,'d')
+// let b = q.keys()
 // let a = q.get(1)
 // q.delete(3)

@@ -33,7 +33,7 @@ function Working_p2p(localhost, localport) {
       peer.port = data.port
       peer.temp_socket = c
       peer.temp_socket.whois = peer
-      if (!peer.name) peer.name = data
+      if (!peer.name) peer.name = JSON.stringify(data)
       peer.temp_socket.on('close', () => {
         this.active_peers.delete(JSON.stringify(data))
       })
@@ -43,7 +43,7 @@ function Working_p2p(localhost, localport) {
         constant_socket.write(JSON.stringify(obj))
         peer.constant_socket = constant_socket
         peer.constant_socket.whois = peer
-        if (!peer.name) peer.name = data
+        if (!peer.name) peer.name = JSON.stringify(data)
         peer.constant_socket.on('close', () => {
           this.active_peers.delete(JSON.stringify(data))
         })
@@ -162,10 +162,13 @@ function Working_p2p(localhost, localport) {
           case 'peer_response':
             ob.peer_response(obj.data)
             break
+          case 'whisper':
+            ob.comming_whisper(obj.data, c.whois.name)
+            break
         }
         chunk = null
       } catch (error) {
-        ob.event_center.emit('error', error)
+        ob.event_center.emit('error', 'fuck')
       }
       chunk = null
     })

@@ -41,10 +41,13 @@ beautiful_p2p(*localhost*, *localport*)
   * config <Object> :{port: number, host: string}
   * callback<Function> optional, callback function
   * argu<any> optional, arguments for callback function
-
 * check_connection(): void check if more peers are needed. Automatically called every 15s. 
 * broadcast (msg): void broadcast a new message
   * msg<String> the message you want to broadcast.
+ * whisper(who, data): void send a message
+    * who<String>the name of the peer, like '{"host":"192.168.1.2","port":4321}'
+    * msg<String> the message to be sent
+* show_peers(): Array return an array of peers' names
 
 `Events`
 
@@ -62,3 +65,5 @@ All events comes from `events` property
 * server_ready  emitted when the server is ready
 
 * server_close  emitted when the server is about to close
+
+* whisper  emitted when received a whisper

@@ -7,6 +7,7 @@ bp1.event_center.on('newBroadcast', function(data){
 
 bp1.event_center.on('newConnection', function(who){
   console.log(`new connection: ${who}`)
+  console.log(bp1.show_peers())
 })
 
 
@@ -20,6 +21,10 @@ bp1.event_center.on('server_close', function(){
 
 bp1.event_center.on('error',(e)=>{
   console.log(`error:::${e}`)
+})
+
+bp1.event_center.on('whisper', (data, who)=>{
+  console.log(`whisper! from ${who}, data:::${data}`)
 })
 
 bp1.serve()

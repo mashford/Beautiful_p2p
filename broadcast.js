@@ -35,6 +35,21 @@ function broadcast (localhost, localport) {
     this.callback = null
     this.argu = null
   }
+  obj.comming_whisper = function (data, who) {
+    this.event_center.emit('whisper', data, who)
+  }
+  obj.whisper = function (who, data) {
+    let obj1 = {type: "whisper", data: data}
+    if(this.active_peers.get(who)){
+      let c = this.active_peers.get(who).constant_socket
+      c.write(JSON.stringify(obj1))
+    } else {
+      this.event_center.emit('error','no such peer')
+    }
+  }
+  obj.show_peers = function () {
+    return this.active_peers.keys()
+  }
   return obj
 }
 
