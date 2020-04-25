@@ -5,7 +5,8 @@ A peer-to-peer module finished in beautiful British Columbia.
 #### Usage
 
 ```javascript
-let beautiful_p2p = require('beautiful-p2p').beautiful_p2p
+
+let beautiful_p2p = require('beautiful_p2p').beautiful_p2p
 let bp = beautiful_p2p('localhost',4321)
 bp.event_center.on('newBroadcast', function(data){
   console.log(data)

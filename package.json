@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/mashford/Beautiful_p2p.git"
   },
-  "keywords": [],
+  "keywords": ["p2p", "peer-to-peer", "peer2peer"],
   "author": "",
   "license": "ISC",
   "bugs": {
